@@ -34,9 +34,7 @@
 
         //default settings for options
         this.parentEl = 'body';
-        this.persian = {
-            enable: false,
-        };
+        this.persian = { enable: false };
         this.element = $(element);
         this.startDate = moment().startOf('day');
         this.endDate = moment().endOf('day');
@@ -85,7 +83,7 @@
             customRangeLabel: 'Custom Range',
             daysOfWeek: moment.weekdaysMin(),
             monthNames: moment.monthsShort(),
-            firstDay:   moment.localeData().firstDayOfWeek()
+            firstDay: moment.localeData().firstDayOfWeek()
         };
 
         this.callback = function () { };
@@ -1588,15 +1586,15 @@
                 if (this.persian.enable !== true) {
                     return;
                 }
-             //   moment.utc(true)
-                
+                //   moment.utc(true)
+
                 this.drp.renderCalendar = this.renderCalendar;
-                const currentYear=moment().format('jYYYY');
-                const currentMonth=moment().format('jMM');
+                const currentYear = moment().format('jYYYY');
+                const currentMonth = moment().format('jMM');
                 const daysInMonth = moment([currentYear, currentMonth]).daysInMonth();
-                this.startMonth=moment.from([currentYear, currentMonth, 1].join('/'), 'fa', 'YYYY/MM/DD');
-                this.startMonth=moment.from([currentYear, currentMonth, daysInMonth].join('/'), 'fa', 'YYYY/MM/DD');
-                
+                this.startMonth = moment.from([currentYear, currentMonth, 1].join('/'), 'fa', 'YYYY/MM/DD');
+                this.startMonth = moment.from([currentYear, currentMonth, daysInMonth].join('/'), 'fa', 'YYYY/MM/DD');
+
 
             },
             renderCalendar: function (side) {
@@ -1618,9 +1616,9 @@
                 var daysInMonth = moment([year, month]).daysInMonth();
                 var jDaysInMonth = moment([jYear, jMonth]).locale('fa').daysInMonth();
                 var firstDay = moment([year, month, 1]);
-                var jFirstDay =moment.from([jYear, jMonth, 1].join('/'), 'fa', 'YYYY/MM/DD')//moment([jYear, jMonth, 1]).format('YYYY/MM/DD');
+                var jFirstDay = moment.from([jYear, jMonth, 1].join('/'), 'fa', 'YYYY/MM/DD')//moment([jYear, jMonth, 1]).format('YYYY/MM/DD');
                 var lastDay = moment([year, month, daysInMonth]);
-                var jLastDay =moment.from([jYear,jMonth, jDaysInMonth].join('/'), 'fa', 'YYYY/MM/DD') ;
+                var jLastDay = moment.from([jYear, jMonth, jDaysInMonth].join('/'), 'fa', 'YYYY/MM/DD');
                 // lastDay=jLastDay;
                 // firstDay=jFirstDay;
                 var lastMonth = moment(firstDay).subtract(1, 'month').month();
@@ -1742,7 +1740,7 @@
 
                 html += '</tr>';
                 html += '<tr>';
-                
+
                 // add week number label
                 if (this.showWeekNumbers || this.showISOWeekNumbers)
                     html += '<th class="week">' + this.locale.weekLabel + '</th>';
