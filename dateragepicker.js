@@ -1665,8 +1665,6 @@
 
                 }
 
-                debugger
-
                 //make the calendar object available to hoverDate/clickDate
                 if (side == 'left') {
                     this.leftCalendar.calendar = calendar;
