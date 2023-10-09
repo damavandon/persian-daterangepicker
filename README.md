@@ -8,4 +8,11 @@
 ### Single Date Picker
 
 ![Build Status](https://user-images.githubusercontent.com/49247720/273688710-c41eaf80-e309-4bed-8609-a96cd8c54277.png)
-## introduction
+## Introduction
+#### This is a modified version of https://www.daterangepicker.com/
+So you can read the complete documentation at this address.
+### Built With
+* jQuery 
+* Jalali moment
+## Getting Started
+
