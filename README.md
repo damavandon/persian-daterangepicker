@@ -5,4 +5,3 @@ Persian Date Range Picker
 ![w7VF48](https://github.com/damavandon/persian-daterangepicker/assets/49247720/c4714378-cf41-461b-8647-04784c4ae62f)
 
 ![C3PT56](https://github.com/damavandon/persian-daterangepicker/assets/49247720/d78588cd-b014-43ac-ba08-c4eef7d9780c)
-
