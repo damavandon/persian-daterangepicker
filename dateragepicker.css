@@ -1,3 +1,5 @@
+
+
 .daterangepicker {
   position: absolute;
   color: inherit;
@@ -147,6 +149,16 @@
   -webkit-transform: rotate(135deg);
 }
 
+.persian-daterangepicker-next {
+  transform: rotate(135deg) !important;
+  -webkit-transform: rotate(135deg) !important;
+}
+
+.persian-daterangepicker-prev {
+  transform: rotate(315deg) !important ;
+  -webkit-transform: rotate(315deg) !important ;
+}
+
 .daterangepicker .calendar-table th,
 .daterangepicker .calendar-table td {
   white-space: nowrap;
@@ -206,11 +218,11 @@
 }
 
 .daterangepicker td.start-date {
-  border-radius: 4px 0 0 4px;
+  border-radius: 0px 4px 4px 0px;
 }
 
 .daterangepicker td.end-date {
-  border-radius: 0 4px 4px 0;
+  border-radius: 4px 0px 0px 4px;
 }
 
 .daterangepicker td.start-date.end-date {
@@ -424,4 +436,33 @@
   .daterangepicker .drp-calendar.left {
     clear: none !important;
   }
+}
+
+
+@font-face {
+  font-family: 'Vazir';
+  src: url('./fonts/vazir/Vazir.woff2') format('woff2'), /* Modern Browsers */
+       url('./fonts/vazir/Vazir.woff') format('woff'); /* Legacy Browsers */
+  /* You can include additional font properties like font-weight and font-style here */
+}
+
+/* light theme */
+
+.daterangepicker {
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  border: 0px;
+}
+
+.table-condensed td {
+  font-family: Vazir !important;
+  font-size: 14px !important;
+  padding: 2px;
+}
+.table-condensed th {
+  font-family: Vazir !important;
+  font-size: 16px !important;
+}
+.today{
+  background-color: #55abf5;
+    color: white;
 }

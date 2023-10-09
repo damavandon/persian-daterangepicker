@@ -1,7 +1,8 @@
 
 /**
 * @version: 3.1
-* @author: Dan Grossman http://www.dangrossman.info/
+* @edited Version:1.0.0
+* @author: Dan Grossman http://www.dangrossman.info/ , Mahdi Torkaman https://www.mahditorkaman.info/
 * @copyright: Copyright (c) 2012-2019 Dan Grossman. All rights reserved.
 * @license: Licensed under the MIT license. See http://www.opensource.org/licenses/mit-license.php
 * @website: http://www.daterangepicker.com/
@@ -44,8 +45,8 @@
         this.autoApply = false;
         this.singleDatePicker = false;
         this.showDropdowns = false;
-        this.minYear = moment().subtract(100, 'year').format('YYYY');
-        this.maxYear = moment().add(100, 'year').format('YYYY');
+        this.minYear = moment().subtract(10, 'year').format('YYYY');
+        this.maxYear = moment().add(10, 'year').format('YYYY');
         this.showWeekNumbers = false;
         this.showISOWeekNumbers = false;
         this.showCustomRangeLabel = true;
@@ -57,8 +58,6 @@
         this.autoUpdateInput = true;
         this.alwaysShowCalendars = false;
         this.ranges = {};
-
-        this.persianObject.init(this, options);
 
         this.opens = 'right';
         if (this.element.hasClass('pull-right'))
@@ -85,7 +84,8 @@
             monthNames: moment.monthsShort(),
             firstDay: moment.localeData().firstDayOfWeek()
         };
-
+        //init persian mode
+        this.persianObject.init(this, options);
         this.callback = function () { };
 
         //some state information
@@ -140,11 +140,11 @@
                 this.locale.separator = options.locale.separator;
 
             if (typeof options.locale.daysOfWeek === 'object')
+                //TODO:add slice
                 this.locale.daysOfWeek = options.locale.daysOfWeek.slice();
 
-
-
             if (typeof options.locale.monthNames === 'object')
+                //TODO:add slice
                 this.locale.monthNames = options.locale.monthNames.slice();
 
             if (typeof options.locale.firstDay === 'number')
@@ -449,7 +449,7 @@
         //
         // if attached to a text input, set the initial value
         //
-
+        this.persianObject.loaded();
         this.updateElement();
 
     };
@@ -547,7 +547,6 @@
         },
 
         updateMonthsInView: function () {
-
             if (this.endDate) {
 
                 //if both dates are visible already, do nothing
@@ -558,23 +557,22 @@
                 ) {
                     return;
                 }
-
-                this.leftCalendar.month = this.startDate.clone().date(2);
+                this.rightCalendar.month = this.startDate.clone()
                 if (!this.linkedCalendars && (this.endDate.month() != this.startDate.month() || this.endDate.year() != this.startDate.year())) {
-                    this.rightCalendar.month = this.endDate.clone().date(2);
+                    this.rightCalendar.month = this.startDate.clone().add(1, 'month');
                 } else {
-                    this.rightCalendar.month = this.startDate.clone().date(2).add(1, 'month');
+                    this.leftCalendar.month = this.startDate.clone().add(1, 'month');
                 }
 
             } else {
-                if (this.leftCalendar.month.format('YYYY-MM') != this.startDate.format('YYYY-MM') && this.rightCalendar.month.format('YYYY-MM') != this.startDate.format('YYYY-MM')) {
-                    this.leftCalendar.month = this.startDate.clone().date(2);
-                    this.rightCalendar.month = this.startDate.clone().date(2).add(1, 'month');
-                }
+                // if (this.leftCalendar.month.format('YYYY-MM') != this.startDate.format('YYYY-MM') && this.rightCalendar.month.format('YYYY-MM') != this.startDate.format('YYYY-MM')) {
+                //     this.leftCalendar.month =this.startDate.clone().date(2);
+                //     this.rightCalendar.month =this.startDate.clone().date(2).add(1, 'month');  
+                // }
             }
             if (this.maxDate && this.linkedCalendars && !this.singleDatePicker && this.rightCalendar.month > this.maxDate) {
-                this.rightCalendar.month = this.maxDate.clone().date(2);
-                this.leftCalendar.month = this.maxDate.clone().date(2).subtract(1, 'month');
+                this.rightCalendar.month = this.maxDate.clone().subtract(1, 'month');
+                this.leftCalendar.month = this.maxDate.clone();
             }
         },
 
@@ -614,9 +612,8 @@
                 this.leftCalendar.month.hour(hour).minute(minute).second(second);
                 this.rightCalendar.month.hour(hour).minute(minute).second(second);
             }
-            this.renderCalendar('left');
             this.renderCalendar('right');
-
+            this.renderCalendar('left');
 
             //highlight any predefined range matching the current start and end dates
             this.container.find('.ranges li').removeClass('active');
@@ -625,240 +622,242 @@
             this.calculateChosenLabel();
         },
 
-        // renderCalendar: function(side) {
-
-        //     //
-        //     // Build the matrix of dates that will populate the calendar
-        //     //
+        renderCalendar: function (side) {
 
 
-        //     var calendar = side == 'left' ? this.leftCalendar : this.rightCalendar;
-        //     var month = calendar.month.month();
-        //     var year = calendar.month.year();
-        //     var hour = calendar.month.hour();
-        //     var minute = calendar.month.minute();
-        //     var second = calendar.month.second();
-        //     var daysInMonth = moment([year, month]).daysInMonth();
-        //     var firstDay = moment([year, month, 1]);
-        //     var lastDay = moment([year, month, daysInMonth]);
-        //     var lastMonth = moment(firstDay).subtract(1, 'month').month();
-        //     var lastYear = moment(firstDay).subtract(1, 'month').year();
-        //     var daysInLastMonth = moment([lastYear, lastMonth]).daysInMonth();
-        //     var dayOfWeek = firstDay.day();
 
-        //     //initialize a 6 rows x 7 columns array for the calendar
-        //     var calendar = [];
-        //     calendar.firstDay = firstDay;
-        //     calendar.lastDay = lastDay;
+            //
+            // Build the matrix of dates that will populate the calendar
+            //
 
-        //     for (var i = 0; i < 6; i++) {
-        //         calendar[i] = [];
-        //     }
 
-        //     //populate the calendar with date objects
-        //     var startDay = daysInLastMonth - dayOfWeek + this.locale.firstDay + 1;
-        //     if (startDay > daysInLastMonth)
-        //         startDay -= 7;
+            var calendar = side == 'left' ? this.leftCalendar : this.rightCalendar;
+            var month = calendar.month.month();
+            var year = calendar.month.year();
+            var hour = calendar.month.hour();
+            var minute = calendar.month.minute();
+            var second = calendar.month.second();
+            var daysInMonth = moment([year, month]).daysInMonth();
+            var firstDay = moment([year, month, 1]);
+            var lastDay = moment([year, month, daysInMonth]);
+            var lastMonth = moment(firstDay).subtract(1, 'month').month();
+            var lastYear = moment(firstDay).subtract(1, 'month').year();
+            var daysInLastMonth = moment([lastYear, lastMonth]).daysInMonth();
+            var dayOfWeek = firstDay.day();
 
-        //     if (dayOfWeek == this.locale.firstDay)
-        //         startDay = daysInLastMonth - 6;
+            //initialize a 6 rows x 7 columns array for the calendar
+            var calendar = [];
+            calendar.firstDay = firstDay;
+            calendar.lastDay = lastDay;
 
-        //     var curDate = moment([lastYear, lastMonth, startDay, 12, minute, second]);
+            for (var i = 0; i < 6; i++) {
+                calendar[i] = [];
+            }
 
-        //     var col, row;
-        //     for (var i = 0, col = 0, row = 0; i < 42; i++, col++, curDate = moment(curDate).add(24, 'hour')) {
-        //         if (i > 0 && col % 7 === 0) {
-        //             col = 0;
-        //             row++;
-        //         }
-        //         calendar[row][col] = curDate.clone().hour(hour).minute(minute).second(second);
-        //         curDate.hour(12);
+            //populate the calendar with date objects
+            var startDay = daysInLastMonth - dayOfWeek + this.locale.firstDay + 1;
+            if (startDay > daysInLastMonth)
+                startDay -= 7;
 
-        //         if (this.minDate && calendar[row][col].format('YYYY-MM-DD') == this.minDate.format('YYYY-MM-DD') && calendar[row][col].isBefore(this.minDate) && side == 'left') {
-        //             calendar[row][col] = this.minDate.clone();
-        //         }
+            if (dayOfWeek == this.locale.firstDay)
+                startDay = daysInLastMonth - 6;
 
-        //         if (this.maxDate && calendar[row][col].format('YYYY-MM-DD') == this.maxDate.format('YYYY-MM-DD') && calendar[row][col].isAfter(this.maxDate) && side == 'right') {
-        //             calendar[row][col] = this.maxDate.clone();
-        //         }
+            var curDate = moment([lastYear, lastMonth, startDay, 12, minute, second]);
 
-        //     }
+            var col, row;
+            for (var i = 0, col = 0, row = 0; i < 42; i++, col++, curDate = moment(curDate).add(24, 'hour')) {
+                if (i > 0 && col % 7 === 0) {
+                    col = 0;
+                    row++;
+                }
+                calendar[row][col] = curDate.clone().hour(hour).minute(minute).second(second);
+                curDate.hour(12);
 
-        //     //make the calendar object available to hoverDate/clickDate
-        //     if (side == 'left') {
-        //         this.leftCalendar.calendar = calendar;
-        //     } else {
-        //         this.rightCalendar.calendar = calendar;
-        //     }
+                if (this.minDate && calendar[row][col].format('YYYY-MM-DD') == this.minDate.format('YYYY-MM-DD') && calendar[row][col].isBefore(this.minDate) && side == 'left') {
+                    calendar[row][col] = this.minDate.clone();
+                }
 
-        //     //
-        //     // Display the calendar
-        //     //
+                if (this.maxDate && calendar[row][col].format('YYYY-MM-DD') == this.maxDate.format('YYYY-MM-DD') && calendar[row][col].isAfter(this.maxDate) && side == 'right') {
+                    calendar[row][col] = this.maxDate.clone();
+                }
 
-        //     var minDate = side == 'left' ? this.minDate : this.startDate;
-        //     var maxDate = this.maxDate;
-        //     var selected = side == 'left' ? this.startDate : this.endDate;
-        //     var arrow = this.locale.direction == 'ltr' ? {left: 'chevron-left', right: 'chevron-right'} : {left: 'chevron-right', right: 'chevron-left'};
+            }
 
-        //     var html = '<table class="table-condensed">';
-        //     html += '<thead>';
-        //     html += '<tr>';
+            //make the calendar object available to hoverDate/clickDate
+            if (side == 'left') {
+                this.leftCalendar.calendar = calendar;
+            } else {
+                this.rightCalendar.calendar = calendar;
+            }
 
-        //     // add empty cell for week number
-        //     if (this.showWeekNumbers || this.showISOWeekNumbers)
-        //         html += '<th></th>';
+            //
+            // Display the calendar
+            //
 
-        //     if ((!minDate || minDate.isBefore(calendar.firstDay)) && (!this.linkedCalendars || side == 'left')) {
-        //         html += '<th class="prev available"><span></span></th>';
-        //     } else {
-        //         html += '<th></th>';
-        //     }
+            var minDate = side == 'left' ? this.minDate : this.startDate;
+            var maxDate = this.maxDate;
+            var selected = side == 'left' ? this.startDate : this.endDate;
+            var arrow = this.locale.direction == 'ltr' ? { left: 'chevron-left', right: 'chevron-right' } : { left: 'chevron-right', right: 'chevron-left' };
 
-        //     var dateHtml = this.locale.monthNames[calendar[1][1].month()] + calendar[1][1].format(" YYYY");
+            var html = '<table class="table-condensed">';
+            html += '<thead>';
+            html += '<tr>';
 
-        //     if (this.showDropdowns) {
-        //         var currentMonth = calendar[1][1].month();
-        //         var currentYear = calendar[1][1].year();
-        //         var maxYear = (maxDate && maxDate.year()) || (this.maxYear);
-        //         var minYear = (minDate && minDate.year()) || (this.minYear);
-        //         var inMinYear = currentYear == minYear;
-        //         var inMaxYear = currentYear == maxYear;
+            // add empty cell for week number
+            if (this.showWeekNumbers || this.showISOWeekNumbers)
+                html += '<th></th>';
 
-        //         var monthHtml = '<select class="monthselect">';
-        //         for (var m = 0; m < 12; m++) {
-        //             if ((!inMinYear || (minDate && m >= minDate.month())) && (!inMaxYear || (maxDate && m <= maxDate.month()))) {
-        //                 monthHtml += "<option value='" + m + "'" +
-        //                     (m === currentMonth ? " selected='selected'" : "") +
-        //                     ">" + this.locale.monthNames[m] + "</option>";
-        //             } else {
-        //                 monthHtml += "<option value='" + m + "'" +
-        //                     (m === currentMonth ? " selected='selected'" : "") +
-        //                     " disabled='disabled'>" + this.locale.monthNames[m] + "</option>";
-        //             }
-        //         }
-        //         monthHtml += "</select>";
+            if ((!minDate || minDate.isBefore(calendar.firstDay)) && (!this.linkedCalendars || side == 'left')) {
+                html += '<th class="prev available"><span></span></th>';
+            } else {
+                html += '<th></th>';
+            }
 
-        //         var yearHtml = '<select class="yearselect">';
-        //         for (var y = minYear; y <= maxYear; y++) {
-        //             yearHtml += '<option value="' + y + '"' +
-        //                 (y === currentYear ? ' selected="selected"' : '') +
-        //                 '>' + y + '</option>';
-        //         }
-        //         yearHtml += '</select>';
+            var dateHtml = this.locale.monthNames[calendar[1][1].month()] + calendar[1][1].format(" YYYY");
 
-        //         dateHtml = monthHtml + yearHtml;
-        //     }
+            if (this.showDropdowns) {
+                var currentMonth = calendar[1][1].month();
+                var currentYear = calendar[1][1].year();
+                var maxYear = (maxDate && maxDate.year()) || (this.maxYear);
+                var minYear = (minDate && minDate.year()) || (this.minYear);
+                var inMinYear = currentYear == minYear;
+                var inMaxYear = currentYear == maxYear;
 
-        //     html += '<th colspan="5" class="month">' + dateHtml + '</th>';
-        //     if ((!maxDate || maxDate.isAfter(calendar.lastDay)) && (!this.linkedCalendars || side == 'right' || this.singleDatePicker)) {
-        //         html += '<th class="next available"><span></span></th>';
-        //     } else {
-        //         html += '<th></th>';
-        //     }
+                var monthHtml = '<select class="monthselect">';
+                for (var m = 0; m < 12; m++) {
+                    if ((!inMinYear || (minDate && m >= minDate.month())) && (!inMaxYear || (maxDate && m <= maxDate.month()))) {
+                        monthHtml += "<option value='" + m + "'" +
+                            (m === currentMonth ? " selected='selected'" : "") +
+                            ">" + this.locale.monthNames[m] + "</option>";
+                    } else {
+                        monthHtml += "<option value='" + m + "'" +
+                            (m === currentMonth ? " selected='selected'" : "") +
+                            " disabled='disabled'>" + this.locale.monthNames[m] + "</option>";
+                    }
+                }
+                monthHtml += "</select>";
 
-        //     html += '</tr>';
-        //     html += '<tr>';
+                var yearHtml = '<select class="yearselect">';
+                for (var y = minYear; y <= maxYear; y++) {
+                    yearHtml += '<option value="' + y + '"' +
+                        (y === currentYear ? ' selected="selected"' : '') +
+                        '>' + y + '</option>';
+                }
+                yearHtml += '</select>';
 
-        //     // add week number label
-        //     if (this.showWeekNumbers || this.showISOWeekNumbers)
-        //         html += '<th class="week">' + this.locale.weekLabel + '</th>';
+                dateHtml = monthHtml + yearHtml;
+            }
 
-        //     $.each(this.locale.daysOfWeek, function(index, dayOfWeek) {
-        //         html += '<th>' + dayOfWeek + '</th>';
-        //     });
+            html += '<th colspan="5" class="month">' + dateHtml + '</th>';
+            if ((!maxDate || maxDate.isAfter(calendar.lastDay)) && (!this.linkedCalendars || side == 'right' || this.singleDatePicker)) {
+                html += '<th class="next available"><span></span></th>';
+            } else {
+                html += '<th></th>';
+            }
 
-        //     html += '</tr>';
-        //     html += '</thead>';
-        //     html += '<tbody>';
+            html += '</tr>';
+            html += '<tr>';
 
-        //     //adjust maxDate to reflect the maxSpan setting in order to
-        //     //grey out end dates beyond the maxSpan
-        //     if (this.endDate == null && this.maxSpan) {
-        //         var maxLimit = this.startDate.clone().add(this.maxSpan).endOf('day');
-        //         if (!maxDate || maxLimit.isBefore(maxDate)) {
-        //             maxDate = maxLimit;
-        //         }
-        //     }
+            // add week number label
+            if (this.showWeekNumbers || this.showISOWeekNumbers)
+                html += '<th class="week">' + this.locale.weekLabel + '</th>';
 
-        //     for (var row = 0; row < 6; row++) {
-        //         html += '<tr>';
+            $.each(this.locale.daysOfWeek, function (index, dayOfWeek) {
+                html += '<th>' + dayOfWeek + '</th>';
+            });
 
-        //         // add week number
-        //         if (this.showWeekNumbers)
-        //             html += '<td class="week">' + calendar[row][0].week() + '</td>';
-        //         else if (this.showISOWeekNumbers)
-        //             html += '<td class="week">' + calendar[row][0].isoWeek() + '</td>';
+            html += '</tr>';
+            html += '</thead>';
+            html += '<tbody>';
 
-        //         for (var col = 0; col < 7; col++) {
+            //adjust maxDate to reflect the maxSpan setting in order to
+            //grey out end dates beyond the maxSpan
+            if (this.endDate == null && this.maxSpan) {
+                var maxLimit = this.startDate.clone().add(this.maxSpan).endOf('day');
+                if (!maxDate || maxLimit.isBefore(maxDate)) {
+                    maxDate = maxLimit;
+                }
+            }
 
-        //             var classes = [];
+            for (var row = 0; row < 6; row++) {
+                html += '<tr>';
 
-        //             //highlight today's date
-        //             if (calendar[row][col].isSame(new Date(), "day"))
-        //                 classes.push('today');
+                // add week number
+                if (this.showWeekNumbers)
+                    html += '<td class="week">' + calendar[row][0].week() + '</td>';
+                else if (this.showISOWeekNumbers)
+                    html += '<td class="week">' + calendar[row][0].isoWeek() + '</td>';
 
-        //             //highlight weekends
-        //             if (calendar[row][col].isoWeekday() > 5)
-        //                 classes.push('weekend');
+                for (var col = 0; col < 7; col++) {
 
-        //             //grey out the dates in other months displayed at beginning and end of this calendar
-        //             if (calendar[row][col].month() != calendar[1][1].month())
-        //                 classes.push('off', 'ends');
+                    var classes = [];
 
-        //             //don't allow selection of dates before the minimum date
-        //             if (this.minDate && calendar[row][col].isBefore(this.minDate, 'day'))
-        //                 classes.push('off', 'disabled');
+                    //highlight today's date
+                    if (calendar[row][col].isSame(new Date(), "day"))
+                        classes.push('today');
 
-        //             //don't allow selection of dates after the maximum date
-        //             if (maxDate && calendar[row][col].isAfter(maxDate, 'day'))
-        //                 classes.push('off', 'disabled');
+                    //highlight weekends
+                    if (calendar[row][col].isoWeekday() > 5)
+                        classes.push('weekend');
 
-        //             //don't allow selection of date if a custom function decides it's invalid
-        //             if (this.isInvalidDate(calendar[row][col]))
-        //                 classes.push('off', 'disabled');
+                    //grey out the dates in other months displayed at beginning and end of this calendar
+                    if (calendar[row][col].month() != calendar[1][1].month())
+                        classes.push('off', 'ends');
 
-        //             //highlight the currently selected start date
-        //             if (calendar[row][col].format('YYYY-MM-DD') == this.startDate.format('YYYY-MM-DD'))
-        //                 classes.push('active', 'start-date');
+                    //don't allow selection of dates before the minimum date
+                    if (this.minDate && calendar[row][col].isBefore(this.minDate, 'day'))
+                        classes.push('off', 'disabled');
 
-        //             //highlight the currently selected end date
-        //             if (this.endDate != null && calendar[row][col].format('YYYY-MM-DD') == this.endDate.format('YYYY-MM-DD'))
-        //                 classes.push('active', 'end-date');
+                    //don't allow selection of dates after the maximum date
+                    if (maxDate && calendar[row][col].isAfter(maxDate, 'day'))
+                        classes.push('off', 'disabled');
 
-        //             //highlight dates in-between the selected dates
-        //             if (this.endDate != null && calendar[row][col] > this.startDate && calendar[row][col] < this.endDate)
-        //                 classes.push('in-range');
+                    //don't allow selection of date if a custom function decides it's invalid
+                    if (this.isInvalidDate(calendar[row][col]))
+                        classes.push('off', 'disabled');
 
-        //             //apply custom classes for this date
-        //             var isCustom = this.isCustomDate(calendar[row][col]);
-        //             if (isCustom !== false) {
-        //                 if (typeof isCustom === 'string')
-        //                     classes.push(isCustom);
-        //                 else
-        //                     Array.prototype.push.apply(classes, isCustom);
-        //             }
+                    //highlight the currently selected start date
+                    if (calendar[row][col].format('YYYY-MM-DD') == this.startDate.format('YYYY-MM-DD'))
+                        classes.push('active', 'start-date');
 
-        //             var cname = '', disabled = false;
-        //             for (var i = 0; i < classes.length; i++) {
-        //                 cname += classes[i] + ' ';
-        //                 if (classes[i] == 'disabled')
-        //                     disabled = true;
-        //             }
-        //             if (!disabled)
-        //                 cname += 'available';
+                    //highlight the currently selected end date
+                    if (this.endDate != null && calendar[row][col].format('YYYY-MM-DD') == this.endDate.format('YYYY-MM-DD'))
+                        classes.push('active', 'end-date');
 
-        //             html += '<td class="' + cname.replace(/^\s+|\s+$/g, '') + '" data-title="' + 'r' + row + 'c' + col + '">' + calendar[row][col].date() + '</td>';
+                    //highlight dates in-between the selected dates
+                    if (this.endDate != null && calendar[row][col] > this.startDate && calendar[row][col] < this.endDate)
+                        classes.push('in-range');
 
-        //         }
-        //         html += '</tr>';
-        //     }
+                    //apply custom classes for this date
+                    var isCustom = this.isCustomDate(calendar[row][col]);
+                    if (isCustom !== false) {
+                        if (typeof isCustom === 'string')
+                            classes.push(isCustom);
+                        else
+                            Array.prototype.push.apply(classes, isCustom);
+                    }
 
-        //     html += '</tbody>';
-        //     html += '</table>';
+                    var cname = '', disabled = false;
+                    for (var i = 0; i < classes.length; i++) {
+                        cname += classes[i] + ' ';
+                        if (classes[i] == 'disabled')
+                            disabled = true;
+                    }
+                    if (!disabled)
+                        cname += 'available';
 
-        //     this.container.find('.drp-calendar.' + side + ' .calendar-table').html(html);
+                    html += '<td class="' + cname.replace(/^\s+|\s+$/g, '') + '" data-title="' + 'r' + row + 'c' + col + '">' + calendar[row][col].date() + '</td>';
 
-        // },
+                }
+                html += '</tr>';
+            }
+
+            html += '</tbody>';
+            html += '</table>';
+
+            this.container.find('.drp-calendar.' + side + ' .calendar-table').html(html);
+
+        },
 
         renderTimePicker: function (side) {
 
@@ -1259,7 +1258,6 @@
         },
 
         hoverDate: function (e) {
-
             //ignore dates that can't be selected
             if (!$(e.target).hasClass('available')) return;
 
@@ -1332,6 +1330,7 @@
                     var second = this.timePickerSeconds ? parseInt(this.container.find('.left .secondselect').val(), 10) : 0;
                     date = date.clone().hour(hour).minute(minute).second(second);
                 }
+
                 this.endDate = null;
                 this.setStartDate(date.clone());
             } else if (!this.endDate && date.isBefore(this.startDate)) {
@@ -1420,13 +1419,14 @@
         },
 
         monthOrYearChanged: function (e) {
+
             var isLeft = $(e.target).closest('.drp-calendar').hasClass('left'),
                 leftOrRight = isLeft ? 'left' : 'right',
                 cal = this.container.find('.drp-calendar.' + leftOrRight);
 
             // Month must be Number for new moment versions
             var month = parseInt(cal.find('.monthselect').val(), 10);
-            var year = cal.find('.yearselect').val();
+            var year = this.persianObject.persianToEnglishDigits(cal.find('.yearselect').val());
 
             if (!isLeft) {
                 if (year < this.startDate.year() || (year == this.startDate.year() && month < this.startDate.month())) {
@@ -1449,10 +1449,14 @@
                 }
             }
 
-            if (isLeft) {
-                this.leftCalendar.month.month(month).year(year);
+            if (!isLeft) {
+                this.rightCalendar.month.month(month).year(year);
                 if (this.linkedCalendars)
-                    this.rightCalendar.month = this.leftCalendar.month.clone().add(1, 'month');
+
+                    if (this.rightCalendar.clone().toDate() > this.leftCalendar.clone().toDate()) {
+                        this.leftCalendar.month = this.rightCalendar.month.clone().add(1, 'month');
+
+                    }
             } else {
                 this.rightCalendar.month.month(month).year(year);
                 if (this.linkedCalendars)
@@ -1589,69 +1593,203 @@
                 //   moment.utc(true)
 
                 this.drp.renderCalendar = this.renderCalendar;
-                const currentYear = moment().format('jYYYY');
-                const currentMonth = moment().format('jMM');
-                const daysInMonth = moment([currentYear, currentMonth]).daysInMonth();
-                this.startMonth = moment.from([currentYear, currentMonth, 1].join('/'), 'fa', 'YYYY/MM/DD');
-                this.startMonth = moment.from([currentYear, currentMonth, daysInMonth].join('/'), 'fa', 'YYYY/MM/DD');
+                this.drp.clickPrev = this.clickPrev;
+                this.drp.clickNext = this.clickNext;
+                this.drp.monthOrYearChanged = this.monthOrYearChanged;
+                this.drp.updateMonthsInView = this.updateMonthsInView;
 
 
             },
-            renderCalendar: function (side) {
-                // const right=this.rightCalendar;
-                // this.rightCalendar= this.leftCalendar
-                // this.leftCalendar=right;
+            loaded: function () {
+                if (this.drp.singleDatePicker) {
+                    this.drp.container.addClass('single');
+                    this.drp.container.find('.drp-calendar.right').addClass('single');
+                    this.drp.container.find('.drp-calendar.right').show();
+                    this.drp.container.find('.drp-calendar.left').hide();
+                    if (!this.drp.timePicker && this.drp.autoApply) {
+                        this.drp.container.addClass('auto-apply');
+                    }
+                }
+            },
+            englishToPersianDigits: function (inputString) {
+                if (this.persian.persianDigits !== true) {
+                    return inputString;
+                }
+                const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+                return inputString.replace(/[0-9]/g, digit => persianDigits[digit]);
+            },
+            persianToEnglishDigits: function (inputString) {
+                const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+                const englishDigits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
-                //
-                // Build the matrix of dates that will populate the calendar
-                //
-                var calendar = side == 'left' ? this.rightCalendar : this.leftCalendar;
-                var month = calendar.month.month();
+                for (let i = 0; i < persianDigits.length; i++) {
+                    const persianDigit = new RegExp(persianDigits[i], 'g');
+                    inputString = inputString.replace(persianDigit, englishDigits[i]);
+                }
+
+                return inputString;
+            },
+            clickPrev: function (e) {
+
+                var cal = $(e.target).parents('.drp-calendar');
+                if (cal.hasClass('right')) {
+                    this.rightCalendar.month.subtract(1, 'month');
+                    if (this.linkedCalendars)
+                        this.leftCalendar.month.subtract(1, 'month');
+                } else {
+                    this.leftCalendar.month.subtract(1, 'month');
+                }
+                this.updateCalendars();
+            },
+
+            clickNext: function (e) {
+                var cal = $(e.target).parents('.drp-calendar');
+                if (cal.hasClass('right')) {
+                    this.rightCalendar.month.add(1, 'month');
+                } else {
+                    this.leftCalendar.month.add(1, 'month');
+                    if (this.linkedCalendars)
+                        this.rightCalendar.month.add(1, 'month');
+                }
+                this.updateCalendars();
+            },
+
+            updateMonthsInView: function () {
+                if (this.endDate) {
+
+                    //if both dates are visible already, do nothing
+                    if (!this.singleDatePicker && this.leftCalendar.month && this.rightCalendar.month &&
+                        (this.startDate.format('YYYY-MM') == this.leftCalendar.month.format('YYYY-MM') || this.startDate.format('YYYY-MM') == this.rightCalendar.month.format('YYYY-MM'))
+                        &&
+                        (this.endDate.format('YYYY-MM') == this.leftCalendar.month.format('YYYY-MM') || this.endDate.format('YYYY-MM') == this.rightCalendar.month.format('YYYY-MM'))
+                    ) {
+                        return;
+                    }
+                    this.rightCalendar.month = this.startDate.clone()
+                    if (!this.linkedCalendars && (this.endDate.month() != this.startDate.month() || this.endDate.year() != this.startDate.year())) {
+                        this.rightCalendar.month = this.startDate.clone().add(1, 'month');
+                    } else {
+                        this.leftCalendar.month = this.startDate.clone().add(1, 'month');
+                    }
+
+                } else {
+                    // if (this.leftCalendar.month.format('YYYY-MM') != this.startDate.format('YYYY-MM') && this.rightCalendar.month.format('YYYY-MM') != this.startDate.format('YYYY-MM')) {
+                    //     this.leftCalendar.month =this.startDate.clone().date(2);
+                    //     this.rightCalendar.month =this.startDate.clone().date(2).add(1, 'month');  
+                    // }
+                }
+                if (this.maxDate && this.linkedCalendars && !this.singleDatePicker && this.rightCalendar.month > this.maxDate) {
+                    this.rightCalendar.month = this.maxDate.clone().subtract(1, 'month');
+                    this.leftCalendar.month = this.maxDate.clone();
+                }
+            },
+
+
+            monthOrYearChanged: function (e) {
+
+                var isLeft = $(e.target).closest('.drp-calendar').hasClass('left'),
+                    leftOrRight = isLeft ? 'left' : 'right',
+                    cal = this.container.find('.drp-calendar.' + leftOrRight);
+
+
+                // Month must be Number for new moment versions
+                var jYear = this.persianObject.persianToEnglishDigits(cal.find('.yearselect').val());
+                var jMonth = parseInt(cal.find('.monthselect').val(), 10);
+                var day = moment(new Date).format('jDD');
+                var date = moment([jYear, jMonth, 1], 'jYYYY-jM,jDD');
+                var year = date.format('YYYY');
+                var month = date.format('M');
+                // if (!isLeft) {
+                //     if (year < this.startDate.year() || (year == this.startDate.year() && month < this.startDate.month())) {
+                //         month = this.startDate.month();
+                //         year = this.startDate.year();
+                //     }
+                // }
+                if (this.minDate) {
+                    if (year < this.minDate.year() || (year == this.minDate.year() && month < this.minDate.month())) {
+                        month = this.minDate.month();
+                        year = this.minDate.year();
+                    }
+                }
+
+                if (this.maxDate) {
+                    if (year > this.maxDate.year() || (year == this.maxDate.year() && month > this.maxDate.month())) {
+                        month = this.maxDate.month();
+                        year = this.maxDate.year();
+                    }
+                }
+
+                if (!isLeft) {
+                    this.rightCalendar.month.month(month).year(year);
+                    if (this.linkedCalendars)
+                        if (this.rightCalendar.month.clone().toDate() < this.leftCalendar.month.clone().toDate()) {
+                            this.leftCalendar.month = this.rightCalendar.month.clone().add(1, 'month');
+                        } else {
+                            if (this.leftCalendar.month.clone().toDate() < this.rightCalendar.month.clone().toDate()) {
+                                this.leftCalendar.month = this.rightCalendar.month.clone().add(1, 'month');
+                            }
+                        }
+                } else {
+                    this.leftCalendar.month.month(month).year(year);
+                    if (this.linkedCalendars)
+
+                        if (this.leftCalendar.month.clone().toDate() < this.rightCalendar.month.clone().toDate()) {
+                            this.rightCalendar.month = this.leftCalendar.month.clone().subtract(1, 'month');
+                        }
+                }
+                this.updateCalendars();
+            },
+            renderCalendar: function (side) {
+
+                var calendar = side == 'right' ? this.rightCalendar : this.leftCalendar;
                 var jMonth = calendar.month.format('jM');
-                var year = calendar.month.year();
                 var jYear = calendar.month.format('jYYYY');
                 var hour = calendar.month.hour();
                 var minute = calendar.month.minute();
                 var second = calendar.month.second();
-                var daysInMonth = moment([year, month]).daysInMonth();
-                var jDaysInMonth = moment([jYear, jMonth]).locale('fa').daysInMonth();
-                var firstDay = moment([year, month, 1]);
-                var jFirstDay = moment.from([jYear, jMonth, 1].join('/'), 'fa', 'YYYY/MM/DD')//moment([jYear, jMonth, 1]).format('YYYY/MM/DD');
-                var lastDay = moment([year, month, daysInMonth]);
+                var jFirstDay = moment.from([jYear, jMonth, 1].join('/'), 'fa', 'YYYY/MM/DD').locale('en');
+                var jDaysInMonth = jFirstDay.clone().locale('fa').daysInMonth();
                 var jLastDay = moment.from([jYear, jMonth, jDaysInMonth].join('/'), 'fa', 'YYYY/MM/DD');
-                // lastDay=jLastDay;
-                // firstDay=jFirstDay;
-                var lastMonth = moment(firstDay).subtract(1, 'month').month();
-                var lastYear = moment(firstDay).subtract(1, 'month').year();
-                var daysInLastMonth = moment([lastYear, lastMonth]).daysInMonth();
-                var dayOfWeek = firstDay.day();
-
-                debugger
+                var dayOfWeek = jFirstDay.day() + 1;
+                if (dayOfWeek > 6) {
+                    dayOfWeek = dayOfWeek - 7;
+                }
 
                 //initialize a 7 rows x 5 columns array for the calendar
                 var calendar = [];
-                calendar.firstDay = firstDay;
-                calendar.lastDay = lastDay;
+                calendar.firstDay = jFirstDay;
+                calendar.lastDay = jLastDay;
 
                 for (var i = 0; i < 6; i++) {
                     calendar[i] = [];
                 }
+                var dayOfWeekOffset = 0;
+                if (dayOfWeek != this.locale.firstDay) {
+                    dayOfWeekOffset = dayOfWeek
 
-                //populate the calendar with date objects
-                var startDay = daysInLastMonth - dayOfWeek + this.locale.firstDay + 1;
-                if (startDay > daysInLastMonth)
-                    startDay -= 7;
+                }
 
-                if (dayOfWeek == this.locale.firstDay)
-                    startDay = daysInLastMonth - 6;
-                var curDate = moment([lastYear, lastMonth, startDay, 12, minute, second]);
+                var curDate = jFirstDay
+                var offsetDate = jFirstDay;
+                var calendarFirstDay = dayOfWeekOffset;
+                var c = 0;
+                var cEnddayOfWeekOffset = dayOfWeekOffset;
+                var offsetAddress = [];
 
                 var col, row;
-                for (var i = 0, col = 0, row = 0; i < 42; i++, col++, curDate = moment(curDate).add(24, 'hour')) {
+                for (var i = 0, col = 0, row = 0; i < (jDaysInMonth); i++, col++, curDate = moment(curDate).add(24, 'hour')) {
                     if (i > 0 && col % 7 === 0) {
                         col = 0;
                         row++;
                     }
+                    while (dayOfWeekOffset) {
+                        offsetAddress.push(c)
+                        ++c;
+                        --dayOfWeekOffset;
+                        offsetDate.add(-24, 'hour');
+
+                    }
+
                     calendar[row][col] = curDate.clone().hour(hour).minute(minute).second(second);
                     curDate.hour(12);
 
@@ -1661,6 +1799,20 @@
 
                     if (this.maxDate && calendar[row][col].format('YYYY-MM-DD') == this.maxDate.format('YYYY-MM-DD') && calendar[row][col].isAfter(this.maxDate) && side == 'right') {
                         calendar[row][col] = this.maxDate.clone();
+                    }
+
+                    if ((i + 1) === jDaysInMonth && cEnddayOfWeekOffset) {
+                        while (cEnddayOfWeekOffset != 0) {
+                            curDate = moment(curDate).add(24, 'hour');
+                            if (calendar[row].length > 6) {
+                                calendar[++row].push(curDate.clone().hour(hour).minute(minute).second(second));
+
+                            } else {
+                                calendar[row].push(curDate.clone().hour(hour).minute(minute).second(second));
+                            }
+                            --cEnddayOfWeekOffset;
+
+                        }
                     }
 
                 }
@@ -1676,65 +1828,85 @@
                 // Display the calendar
                 //
 
-                var minDate = side == 'left' ? this.minDate : this.startDate;
+                var minDate = side == 'right' ? this.minDate : this.startDate;
                 var maxDate = this.maxDate;
-                var arrow = this.locale.direction == 'ltr' ? { left: 'chevron-left', right: 'chevron-right' } : { left: 'chevron-right', right: 'chevron-left' };
 
-                var html = '<table class="table-condensed">';
+                var html = '<table style="direction: rtl;" class="table-condensed">';
                 html += '<thead>';
                 html += '<tr>';
 
-                // add empty cell for week number
-                if (this.showWeekNumbers || this.showISOWeekNumbers)
-                    html += '<th></th>';
 
-                if ((!minDate || minDate.isBefore(calendar.firstDay)) && (!this.linkedCalendars || side == 'left')) {
-                    html += '<th class="prev available"><span></span></th>';
-                } else {
-                    html += '<th></th>';
-                }
-
-                var dateHtml = this.locale.monthNames[calendar[1][1].format('jM')] + calendar[1][1].format(" jYYYY");
+                var dateHtml = this.locale.monthNames[calendar[1][1].format('jM') - 1] + this.persianObject.englishToPersianDigits(calendar[1][1].format(" jYYYY"));
 
                 if (this.showDropdowns) {
-                    var currentMonth = calendar[1][1].month();
-                    var currentYear = calendar[1][1].year();
+                    var jCurrentMonth = parseInt(moment(calendar[0][calendarFirstDay]).format('jM'));
+                    var currentMonth = parseInt(moment(calendar[0][calendarFirstDay]).format('M'));
+                    var m = 1
+                    if (side === 'right') {
+                        this.rightMonth = jCurrentMonth;
+                    } else {
+                        if (this.rightMonth < 12) {
+                            m = this.rightMonth + 1
+                        }
+                    }
+                    var day = moment(calendar[0][calendarFirstDay]).format('D');
+                    var currentYear = calendar[0][calendarFirstDay].toDate().getFullYear();
+                    var jCurrentYear = moment(calendar[0][calendarFirstDay]).format('jYYYY');
                     var maxYear = (maxDate && maxDate.year()) || (this.maxYear);
                     var minYear = (minDate && minDate.year()) || (this.minYear);
                     var inMinYear = currentYear == minYear;
                     var inMaxYear = currentYear == maxYear;
-
                     var monthHtml = '<select class="monthselect">';
-                    for (var m = 0; m < 12; m++) {
-                        if ((!inMinYear || (minDate && m >= minDate.month())) && (!inMaxYear || (maxDate && m <= maxDate.month()))) {
-                            monthHtml += "<option value='" + m + "'" +
-                                (m === currentMonth ? " selected='selected'" : "") +
-                                ">" + this.locale.monthNames[m] + "</option>";
+                    for (m; m <= 12; m++) {
+                        if (minDate) {
+                            var mcm = minDate.clone().locale('fa').month();
+                        }
+                        if (maxDate) {
+                            var mcx = maxDate.clone().locale('fa').month()
+                        }
+                        if ((!inMinYear || (minDate && m > mcm)) && (!inMaxYear || (maxDate && m < mcx))) {
+                            monthHtml += "<option value='" + m + "'" + (m == jCurrentMonth ? " selected='selected'" : "") + ">" + this.locale.monthNames[m - 1] + "</option>";
                         } else {
-                            monthHtml += "<option value='" + m + "'" +
-                                (m === currentMonth ? " selected='selected'" : "") +
-                                " disabled='disabled'>" + this.locale.monthNames[m] + "</option>";
+                            if (side === 'right') {
+                                monthHtml += "<option value='" + m + "'" + (m == jCurrentMonth ? " selected='selected'" : "") + " disabled='disabled'>" + this.locale.monthNames[m - 1] + "</option>";
+                            } else {
+                                monthHtml += "<option value='" + m + "'" + (m == jCurrentMonth ? " " : "") + " '>" + this.locale.monthNames[m - 1] + "</option>";
+                            }
                         }
                     }
                     monthHtml += "</select>";
-
                     var yearHtml = '<select class="yearselect">';
+                    var date = moment([minYear, 6, 1]);
+                    var jY;
                     for (var y = minYear; y <= maxYear; y++) {
-                        yearHtml += '<option value="' + y + '"' +
-                            (y === currentYear ? ' selected="selected"' : '') +
-                            '>' + y + '</option>';
+                        jY = date.format('jYYYY');
+                        yearHtml += '<option value="' + jY + '"' + (jY === jCurrentYear ? ' selected="selected"' : '') + '>' + this.persianObject.englishToPersianDigits(jY) + '</option>';
+                        date.add(1, 'year');
                     }
                     yearHtml += '</select>';
 
                     dateHtml = monthHtml + yearHtml;
                 }
 
-                html += '<th colspan="5" class="month">' + dateHtml + '</th>';
-                if ((!maxDate || maxDate.isAfter(calendar.lastDay)) && (!this.linkedCalendars || side == 'right' || this.singleDatePicker)) {
-                    html += '<th class="next available"><span></span></th>';
+                if ((!minDate || minDate.isBefore(calendar.firstDay)) && (!this.linkedCalendars || side == 'right')) {
+                    html += '<th class="prev available"><span class="persian-daterangepicker-prev"></span ></th>';
                 } else {
                     html += '<th></th>';
                 }
+
+
+                html += '<th colspan="5" class="month">' + dateHtml + '</th>';
+
+                // add empty cell for week number
+                if (this.showWeekNumbers || this.showISOWeekNumbers)
+                    html += '<th></th>';
+
+                if ((!maxDate || maxDate.isAfter(calendar.lastDay)) && (!this.linkedCalendars || side == 'left' || this.singleDatePicker)) {
+                    html += '<th class="next  available"><span class="persian-daterangepicker-next"></span ></th>';
+                } else {
+                    html += '<th></th>';
+                }
+
 
                 html += '</tr>';
                 html += '<tr>';
@@ -1743,15 +1915,16 @@
                 if (this.showWeekNumbers || this.showISOWeekNumbers)
                     html += '<th class="week">' + this.locale.weekLabel + '</th>';
 
-                // for (var i = 1; i < this.locale.daysOfWeek.length; i++) {
 
-                //     html += '<th>' + this.locale.daysOfWeek[i] + '</th>';
-                //   }
 
-                $.each(this.locale.daysOfWeek, function (index, dayOfWeek) {
+                for (var i = 0; i < this.locale.daysOfWeek.length; ++i) {
+                    html += '<th>' + this.locale.daysOfWeek[i] + '</th>';
+                }
 
-                    html += '<th>' + dayOfWeek + '</th>';
-                }); ``
+                // $.each(this.locale.daysOfWeek, function (index, dayOfWeek) {
+
+                //     html += '<th>' + dayOfWeek + '</th>';
+                // }); ``
 
                 html += '</tr>';
                 html += '</thead>';
@@ -1766,7 +1939,9 @@
                     }
                 }
 
-                for (var row = 0; row < 6; row++) {
+
+                for (var row = 0; row < 7; row++) {
+
                     html += '<tr>';
 
                     // add week number
@@ -1775,67 +1950,71 @@
                     else if (this.showISOWeekNumbers)
                         html += '<td class="week">' + calendar[row][0].isoWeek() + '</td>';
 
+
                     for (var col = 0; col < 7; col++) {
 
-                        var classes = [];
+                        if (typeof calendar[row] !== 'undefined' && typeof calendar[row][col] !== 'undefined') {
+                            var classes = [];
+                            let t = moment.localeData().firstDayOfWeek()
+                            //highlight today's date
+                            if (calendar[row][col].isSame(new Date(), "day"))
+                                classes.push('today');
 
-                        let t = moment.localeData().firstDayOfWeek()
-                        //highlight today's date
-                        if (calendar[row][col].isSame(new Date(), "day"))
-                            classes.push('today');
+                            // highlight weekends
+                            if (calendar[row][col].isoWeekday() > 6)
+                                classes.push('weekend');
 
-                        //highlight weekends
-                        if (calendar[row][col].isoWeekday() > 5)
-                            classes.push('weekend');
 
-                        //grey out the dates in other months displayed at beginning and end of this calendar
-                        if (calendar[row][col].month() != calendar[1][1].month())
-                            classes.push('off', 'ends');
+                            //don't allow selection of dates before the minimum date
+                            if (this.minDate && calendar[row][col].isBefore(this.minDate, 'day'))
+                                classes.push('off', 'disabled');
 
-                        //don't allow selection of dates before the minimum date
-                        if (this.minDate && calendar[row][col].isBefore(this.minDate, 'day'))
-                            classes.push('off', 'disabled');
+                            //don't allow selection of dates before the minimum date
+                            if (typeof offsetAddress[0] !== 'undefined' && offsetAddress[0] === col) {
+                                classes.push('off', 'disabled');
+                                offsetAddress.splice(0, 1);
+                            }
 
-                        //don't allow selection of dates after the maximum date
-                        if (maxDate && calendar[row][col].isAfter(maxDate, 'day'))
-                            classes.push('off', 'disabled');
+                            //don't allow selection of dates after the maximum date
+                            if (maxDate && calendar[row][col].isAfter(maxDate, 'day'))
+                                classes.push('off', 'disabled');
 
-                        //don't allow selection of date if a custom function decides it's invalid
-                        if (this.isInvalidDate(calendar[row][col]))
-                            classes.push('off', 'disabled');
+                            //don't allow selection of date if a custom function decides it's invalid
+                            if (this.isInvalidDate(calendar[row][col]))
+                                classes.push('off', 'disabled');
 
-                        //highlight the currently selected start date
-                        if (calendar[row][col].format('YYYY-MM-DD') == this.startDate.format('YYYY-MM-DD'))
-                            classes.push('active', 'start-date');
+                            //highlight the currently selected start date
+                            if (calendar[row][col].format('YYYY-MM-DD') == this.startDate.format('YYYY-MM-DD'))
+                                classes.push('active', 'start-date');
 
-                        //highlight the currently selected end date
-                        if (this.endDate != null && calendar[row][col].format('YYYY-MM-DD') == this.endDate.format('YYYY-MM-DD'))
-                            classes.push('active', 'end-date');
+                            //highlight the currently selected end date
+                            if (this.endDate != null && calendar[row][col].format('YYYY-MM-DD') == this.endDate.format('YYYY-MM-DD'))
+                                classes.push('active', 'end-date');
 
-                        //highlight dates in-between the selected dates
-                        if (this.endDate != null && calendar[row][col] > this.startDate && calendar[row][col] < this.endDate)
-                            classes.push('in-range');
+                            //highlight dates in-between the selected dates
+                            if (this.endDate != null && calendar[row][col] > this.startDate && calendar[row][col] < this.endDate)
+                                classes.push('in-range');
 
-                        //apply custom classes for this date
-                        var isCustom = this.isCustomDate(calendar[row][col]);
-                        if (isCustom !== false) {
-                            if (typeof isCustom === 'string')
-                                classes.push(isCustom);
-                            else
-                                Array.prototype.push.apply(classes, isCustom);
+                            //apply custom classes for this date
+                            var isCustom = this.isCustomDate(calendar[row][col]);
+                            if (isCustom !== false) {
+                                if (typeof isCustom === 'string')
+                                    classes.push(isCustom);
+                                else
+                                    Array.prototype.push.apply(classes, isCustom);
+                            }
+
+                            var cname = '', disabled = false;
+                            for (var i = 0; i < classes.length; i++) {
+                                cname += classes[i] + ' ';
+                                if (classes[i] == 'disabled')
+                                    disabled = true;
+                            }
+                            if (!disabled)
+                                cname += 'available';
+
+                            html += '<td class="' + cname.replace(/^\s+|\s+$/g, '') + '" data-title="' + 'r' + row + 'c' + col + '">' + this.persianObject.englishToPersianDigits(calendar[row][col].format('jDD')) + '</td>';
                         }
-
-                        var cname = '', disabled = false;
-                        for (var i = 0; i < classes.length; i++) {
-                            cname += classes[i] + ' ';
-                            if (classes[i] == 'disabled')
-                                disabled = true;
-                        }
-                        if (!disabled)
-                            cname += 'available';
-
-                        html += '<td class="' + cname.replace(/^\s+|\s+$/g, '') + '" data-title="' + 'r' + row + 'c' + col + '">' + calendar[row][col].format('jDD') + '</td>';
-
                     }
                     html += '</tr>';
                 }
