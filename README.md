@@ -9,8 +9,7 @@
 
 ![Build Status](https://user-images.githubusercontent.com/49247720/273688710-c41eaf80-e309-4bed-8609-a96cd8c54277.png)
 ## Introduction
-#### This is a modified version of https://www.daterangepicker.com/
-So you can read the complete documentation at this address.
+
 ### Built With
 * jQuery 
 * Jalali moment
@@ -72,3 +71,18 @@ const Jmoment = moment().locale('fa');
         }
     });
 ```
+To create a Persian date range picker, you can use the "settings" object as follows:
+
+```javascript
+ persian: {
+            enable: true,
+            persianDigits: true,
+        },
+```
+In this object, the two properties serve the following purposes:
+enable: Used to enable the Persian localization feature.
+persianDigits: Used to convert English digits to Persian.
+
+#### This is a modified version of https://www.daterangepicker.com/
+So you can read the complete documentation at this address.
+
