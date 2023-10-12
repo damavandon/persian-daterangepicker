@@ -16,4 +16,17 @@ So you can read the complete documentation at this address.
 * Jalali moment
 ## Getting Started
 
-I am currently completing this file
+To start this project, you only need to do one step.
+
+### Prerequisites
+Download DateRangePicker and include it in your poject with jQuery and Jalali Moment. 
+
+### Installation
+
+```html
+<link rel="stylesheet" type="text/css" href="dateragepicker.css" />
+<script type="text/javascript" src="jquery.js"></script>
+<script src="jalali-moment.js"></script>
+<script src="dateragepicker.js"></script>
+```
+
