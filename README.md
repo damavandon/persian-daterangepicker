@@ -19,7 +19,7 @@ So you can read the complete documentation at this address.
 To start this project, you only need to do one step.
 
 ### Prerequisites
-Download DateRangePicker and include it in your poject with jQuery and Jalali Moment. 
+Download daterangepicker and include it in your project with jQuery and Jalali Moment. 
 
 ### Installation
 
@@ -29,4 +29,46 @@ Download DateRangePicker and include it in your poject with jQuery and Jalali Mo
 <script src="jalali-moment.js"></script>
 <script src="dateragepicker.js"></script>
 ```
-
+### Usage
+```javascript
+const Jmoment = moment().locale('fa');
+    $('#daterangepicker').daterangepicker({
+        autoApply: true,
+        alwaysShowCalendars: true,
+        minDate: new Date(),
+        persian: {
+            enable: true,
+            persianDigits: true,
+        },
+        locale: {
+            direction: 'rtl',
+            firstDay: 0,
+            format: 'jYYYY-jMM-jDD',
+            applyLabel: 'اعمال',
+            cancelLabel: 'لغو',
+            monthNames: [
+                "فروردین",
+                "اردیبهشت",
+                "خرداد",
+                "تیر",
+                "مرداد",
+                "شهریور",
+                "مهر",
+                "آبان",
+                "آذر",
+                "دی",
+                "بهمن",
+                "اسفند"
+            ],
+            daysOfWeek: [
+                'ش',
+                'ی',
+                'د',
+                'س',
+                'چ',
+                'پ',
+                'ج',
+            ],
+        }
+    });
+```
